@@ -1,11 +1,12 @@
 #pragma once
 
+#include <math.h>
 #include <stdint.h>
 #include <string>
 
 
 enum DynType {
-    NONE,
+    TNONE,
     TSTRING,         // 1
     TINT32,          // 2
     TUINT32,         // 3
@@ -25,7 +26,8 @@ enum DynType {
 
 struct DynVal {
 public:
-  DynType           getTypeEnum() const { return typeId; }
+  DynType  getTypeId() const { return typeId; }
+  bool     valid() const { return typeId != TNONE; }
 
   uint8_t  as_u8() const;
   uint16_t as_u16() const;
@@ -52,8 +54,9 @@ public:
   void operator=(int64_t val) { typeId=TINT64; i64val=val; }
   void operator=(uint64_t val) { typeId=TUINT64; u64val=val; }
   void operator=(double val) { typeId=TFLOAT64; dval=val; }
+  void operator=(float val) { typeId=TFLOAT32; dval=val; }
 
-  DynVal() : typeId(DynType::NONE), i64val(0), strval() {}
+  DynVal() : typeId(DynType::TNONE), i64val(0), strval() {}
   DynVal(int32_t val) : typeId(TINT32), i32val(val), strval() {}
   DynVal(uint32_t val) : typeId(TUINT32), u32val(val), strval() {}
   DynVal(int64_t val) : typeId(TINT64), i64val(val), strval() {}
@@ -63,11 +66,21 @@ public:
   DynVal(int8_t val) : typeId(TINT8), i8val(val), strval() {}
   DynVal(uint8_t val) : typeId(TUINT8), u8val(val), strval() {}
   DynVal(double val) : typeId(TFLOAT64), dval(val), strval() {}
+  DynVal(float val) : typeId(TFLOAT32), dval(val), strval() {}
   DynVal(std::string val) : typeId(TSTRING), i64val(0), strval(val) {}
+
+  operator int8_t() const { return as_i8(); }
+  operator uint8_t() const { return as_u8(); }
+  operator int32_t() const { return as_i32(); }
+  operator uint32_t() const { return as_u32(); }
+  operator int64_t() const { return as_i64(); }
+  operator uint64_t() const { return as_u64(); }
+  operator double() const { return as_double(); }
+  operator float() const { return as_float(); }
+  operator const std::string() const { return as_s(); }
 
 protected:
   DynType  typeId;
-  bool isValid;
 
   union {
     int32_t  i32val;
@@ -82,6 +95,7 @@ protected:
   };
   std::string strval;
 };
+
 
 struct DynFieldMeta {
   uint32_t      id;
@@ -105,7 +119,7 @@ struct DynValWithSchema : public DynVal {
   typedef std::shared_ptr<DynFieldMeta> SPFieldMeta;
 
 
-}
+};
 
 struct DynObj {
   // has schema assigned?
@@ -120,3 +134,5 @@ struct DynObj {
   const DynVal& operator[](int columnIndex) const;
   const DynVal& operator[](uint64_t columnIndex) const;
 };
+
+#include "_dyn_impl.hpp"
