@@ -47,7 +47,7 @@ void testfunc() {
   obj[UID]    = 2348429;        // created as TINT32
   obj[HEIGHT] = "86";           // created as TSTRING
 
-  Normalize(obj);
+  Dyno::Normalize(obj);
 
   // types now match FieldDef
 

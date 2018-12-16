@@ -62,11 +62,14 @@ friend FieldDefTest;
  */
 typedef std::map<const SPFieldDef, DynVal> DynMap;
 
+class Dyno {
+public:
+
 /**
  * Normalize will take an DynMap object and convert the values to match
  * the SPFieldDef types.
  */
-void Normalize(DynMap &obj) {
+static void Normalize(DynMap &obj) {
   for (auto it = obj.begin(); it != obj.end(); it++) {
     const SPFieldDef spf = it->first;
     if (spf->typeId != it->second.type()) {
@@ -74,5 +77,6 @@ void Normalize(DynMap &obj) {
     }
   }
 }
+}; // class dyno
 
 #endif // _DYNOBJ_H_

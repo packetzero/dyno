@@ -74,7 +74,7 @@ TEST_F(DynObjTest, normalize) {
   ASSERT_EQ(TINT32, obj[UID].type());
   ASSERT_EQ(TSTRING, obj[HEIGHT].type());
 
-  Normalize(obj);
+  Dyno::Normalize(obj);
 
   // types should now match FieldDef
 
