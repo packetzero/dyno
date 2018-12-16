@@ -27,7 +27,7 @@ enum DynType {
 
 struct DynVal {
 public:
-  DynType  getTypeId() const { return typeId; }
+  DynType  type() { return typeId; }
   bool     valid() const { return typeId != TNONE; }
 
   void operator=(const std::string s) { typeId=TSTRING; strval = s; }
@@ -71,6 +71,14 @@ public:
 
   bool operator==(const std::string& b) const { return b == as_s(); }
   bool operator==( std::string& b)  { return b == as_s(); }
+  bool operator==(int32_t b) const { return b == as_i32(); }
+  bool operator==(uint32_t b) const { return b == as_u32(); }
+  bool operator==(int64_t b) const { return b == as_i64(); }
+  bool operator==(uint64_t b) const { return b == as_u64(); }
+  bool operator==(uint8_t b) const { return b == as_u8(); }
+  bool operator==(int8_t b) const { return b == as_i8(); }
+  bool operator==(double b) const { return b == as_double(); }
+  bool operator==(float b) const { return b == as_float(); }
 
   int32_t as_i32() const {
     switch(typeId) {
@@ -113,6 +121,8 @@ public:
         return (uint32_t)u64val;
       case TFLOAT64:
         return (uint32_t)floor(dval);
+      case TSTRING:
+        return (uint32_t)atol(strval.c_str());
       case TNONE:
       default:
         throw new std::runtime_error("unset");
@@ -289,8 +299,6 @@ public:
     }
   }
 
-  DynType type() { return typeId; }
-
 protected:
   DynType  typeId;
 
@@ -307,5 +315,42 @@ protected:
   };
   std::string strval;
 };
+
+#define DYN_TO(VAL, TYPEID, DEST) { \
+  switch(TYPEID) { \
+    case TINT32: \
+      (DEST) = DynVal((VAL).as_i32()); \
+      break; \
+    case TUINT32: \
+      (DEST) = DynVal((VAL).as_u32()); \
+      break; \
+    case TINT8: \
+      (DEST) = DynVal((VAL).as_i8()); \
+      break; \
+    case TUINT8: \
+      (DEST) = DynVal((VAL).as_u8()); \
+      break; \
+    case TINT64: \
+      (DEST) = DynVal((VAL).as_i64()); \
+      break; \
+    case TUINT64: \
+      (DEST) = DynVal((VAL).as_u64()); \
+      break; \
+    case TFLOAT64: \
+      (DEST) = DynVal((VAL).as_double()); \
+      break; \
+    case TFLOAT32: \
+      (DEST) = DynVal((VAL).as_float()); \
+      break; \
+    case TSTRING: \
+      (DEST) = DynVal((VAL).as_s()); \
+      break; \
+    case TNONE: \
+    default: \
+      throw new std::runtime_error("unset"); \
+      break; \
+  } \
+} // end macro DYN_TO()
+
 
 #endif //_DYNO_H_
