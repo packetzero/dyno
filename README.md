@@ -32,36 +32,28 @@ worrying about conversion each encountered value.
 
 ```
 // app defines schema for fields
-static const SPFieldDef NAME = FieldDef::alloc(TSTRING, "name");
+static const SPFieldDef NAME   = FieldDef::alloc(TSTRING, "name");
 static const SPFieldDef NUMBER = FieldDef::alloc(TUINT32, "number");
 static const SPFieldDef ACTIVE = FieldDef::alloc(TUINT8, "active");
-static const SPFieldDef UID = FieldDef::alloc(TINT64, "uid");
+static const SPFieldDef UID    = FieldDef::alloc(TINT64, "uid");
 static const SPFieldDef HEIGHT = FieldDef::alloc(TINT32, "height");
 
-TEST_F(DynObjTest, normalize) {
+void testfunc() {
   DynMap obj;
 
-  // app assigns values in flexible manner
-
-  obj[NAME] = "Kareem";
-  obj[NUMBER] = 33;
-  obj[ACTIVE] = false;
-  obj[UID] = 2348429;
-  obj[HEIGHT] = "86";
-
-  // current types based on assignments
-
-  ASSERT_EQ(TINT32, obj[NUMBER].type());
-  ASSERT_EQ(TINT32, obj[ACTIVE].type());
-  ASSERT_EQ(TINT32, obj[UID].type());
-  ASSERT_EQ(TSTRING, obj[HEIGHT].type());
+  obj[NAME]   = "Kareem";
+  obj[NUMBER] = 33;             // created as TINT32
+  obj[ACTIVE] = false;          // created as TINT32
+  obj[UID]    = 2348429;        // created as TINT32
+  obj[HEIGHT] = "86";           // created as TSTRING
 
   Normalize(obj);
 
-  // types should now match FieldDef
+  // types now match FieldDef
 
   ASSERT_EQ(TUINT32, obj[NUMBER].type());
-  ASSERT_EQ(TUINT8, obj[ACTIVE].type());
-  ASSERT_EQ(TINT64, obj[UID].type());
-  ASSERT_EQ(TINT32, obj[HEIGHT].type());
+  ASSERT_EQ(TUINT8,  obj[ACTIVE].type());
+  ASSERT_EQ(TINT64,  obj[UID].type());
+  ASSERT_EQ(TINT32,  obj[HEIGHT].type());
+}
 ```
