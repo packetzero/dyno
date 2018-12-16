@@ -237,3 +237,30 @@ TEST_F(SetTest, floats) {
   // can have trailing 0's in decimal, so search for substring
   ASSERT_TRUE(s2.find("-987.4321") != std::string::npos);
 }
+
+TEST_F(SetTest, strings) {
+  // construct assign
+  DynVal v = "some string";
+  ASSERT_TRUE(v.valid());
+  ASSERT_EQ(TSTRING, v.getTypeId());
+  ASSERT_EQ("some string",v.as_s());
+  ASSERT_EQ(v, "some string");
+  const std::string s = v;
+  ASSERT_EQ("some string",(const std::string)v);
+  ASSERT_TRUE(v == s);
+  ASSERT_EQ(v,s);
+  ASSERT_TRUE(s == (const std::string)v);
+  ASSERT_EQ(s,(std::string)v);
+
+  // equals assign
+
+  v = DynVal();
+  std::string  sval1 = "123456";
+  v = sval1;
+  ASSERT_EQ(TSTRING, v.getTypeId());
+  ASSERT_EQ(sval1, (std::string)v);
+  ASSERT_EQ(sval1, v.as_s());
+
+  // as_s
+  ASSERT_EQ("123456", v.as_s());
+}
