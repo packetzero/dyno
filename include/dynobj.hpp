@@ -36,12 +36,20 @@ struct FieldDef {
     FieldDef *tmp = new FieldDef(typeId_, name_, id_, 0);
     return std::shared_ptr<FieldDef>(tmp);
   }
-  static const SPFieldDef alloc(DynType typeId_, uint32_t id_, uint32_t schemaId_) {
+  static const SPFieldDef alloc(DynType typeId_, uint32_t id_, uint32_t schemaId_ = 0) {
     FieldDef *tmp = new FieldDef(typeId_, "", id_, schemaId_);
     return std::shared_ptr<FieldDef>(tmp);
   }
+  static const SPFieldDef alloc(DynType typeId_, std::string name_, uint32_t id_, uint32_t schemaId_=0) {
+    FieldDef *tmp = new FieldDef(typeId_, name_, id_, schemaId_);
+    return std::shared_ptr<FieldDef>(tmp);
+  }
 
-private:
+  bool valid() const {
+    return (typeId != TNONE && typeId < NUM_TYPES);
+  }
+
+protected:
   FieldDef(DynType typeId_, std::string name_,
     uint32_t id_, uint32_t schemaId_) : typeId(typeId_), name(name_),
     id(id_), schemaId(schemaId_) {

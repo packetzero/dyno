@@ -57,9 +57,14 @@ public:
   DynVal(float val) : typeId(TFLOAT32), dval(val), strval() {}
   DynVal(std::string val) : typeId(TSTRING), i64val(0), strval(val) {}
   DynVal(const char *val) : typeId(TSTRING), i64val(0), strval(std::string(val)) {}
+  DynVal(std::vector<uint8_t> val) : typeId(TBYTES), i64val(0), strval() {
+    strval.assign((const char *)val.data(), val.size());
+  }
 
   operator int8_t() const { return as_i8(); }
   operator uint8_t() const { return as_u8(); }
+  operator int16_t() const { return as_i16(); }
+  operator uint16_t() const { return as_u16(); }
   operator int32_t() const { return as_i32(); }
   operator uint32_t() const { return as_u32(); }
   operator int64_t() const { return as_i64(); }
@@ -272,9 +277,61 @@ public:
     }
   }
 
+  int16_t as_i16() const {
+    switch(typeId) {
+      case TINT16:
+        return i16val;
+      case TUINT32:
+        return (int16_t)u32val;
+      case TINT8:
+        return (int16_t)i8val;
+      case TUINT8:
+        return (int16_t)u8val;
+      case TINT64:
+        return (int16_t)i64val;
+      case TUINT64:
+        return (int16_t)u64val;
+      case TFLOAT64:
+        return (int16_t)floor(dval);
+      case TSTRING:
+        return (int16_t)atoi(strval.c_str());
+      case TNONE:
+      default:
+        throw new std::runtime_error("unset");
+        break;
+    }
+  }
+
+  uint16_t as_u16() const {
+    switch(typeId) {
+      case TUINT16:
+        return u16val;
+      case TINT32:
+        return (uint16_t)i32val;
+      case TINT8:
+        return (uint16_t)i8val;
+      case TUINT8:
+        return (uint16_t)u8val;
+      case TINT64:
+        return (uint16_t)i64val;
+      case TUINT64:
+        return (uint16_t)u64val;
+      case TFLOAT64:
+        return (uint16_t)floor(dval);
+      case TSTRING:
+        return (uint16_t)atol(strval.c_str());
+      case TNONE:
+      default:
+        throw new std::runtime_error("unset");
+        break;
+    }
+  }
+
   const std::string as_s() const {
     switch(typeId) {
       case TSTRING:
+        return strval;
+      case TBYTES:
         return strval;
       case TINT32:
         return std::to_string(i32val);
