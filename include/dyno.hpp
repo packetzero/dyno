@@ -224,6 +224,8 @@ public:
         return (double)i8val;
       case TUINT8:
         return (double)u8val;
+      case TSTRING:
+        return atof(strval.c_str());
       case TNONE:
       default:
         throw new std::runtime_error("unset");
