@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <string>
+#include <vector>
 
 enum DynType {
     TNONE,

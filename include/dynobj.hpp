@@ -3,6 +3,7 @@
 #define _DYNOBJ_H_
 
 #include <string>
+#include <map>
 #include <functional> // std::hash
 #include "dyno.hpp"
 
