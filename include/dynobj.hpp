@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <functional> // std::hash
+#include <memory>
 #include "dyno.hpp"
 
 class FieldDefTest;
