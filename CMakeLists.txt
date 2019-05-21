@@ -12,10 +12,16 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -DNDEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG=1")
 
 if($ENV{MAKE_TESTS})
+  set(GTEST_DIR $ENV{GTEST_DIR})
+
+  include_directories(.. ${GTEST_DIR}/include )
+
   file(GLOB TESTSRCS "test/*.c*")
 
   ADD_EXECUTABLE(dynotests ${TESTSRCS})
-  TARGET_LINK_LIBRARIES(dynotests gtest)
+
+  TARGET_LINK_LIBRARIES(dynotests ${GTEST_DIR}/lib/libgtest.a )
+
 else()
   message("===================================")
   message("NOTE: This is a header-only library")

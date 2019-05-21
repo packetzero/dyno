@@ -8,11 +8,20 @@
 #include <memory>
 #include "dyno.hpp"
 
-class FieldDefTest;
+struct SchemaId {
+  uint32_t schemaId;
+  std::string schemaName;
 
+  SchemaId(std::string name, uint32_t id=0) : schemaId(id), schemaName(name) {}
+};
+
+typedef std::shared_ptr<SchemaId> SPSchemaId;
+
+// forward declarations for alloc
+
+class FieldDefTest;
 struct FieldDef;
 typedef std::shared_ptr<FieldDef> SPFieldDef;
-
 
 /*
  * FieldDef is a typed identifier of a table column or object field.
@@ -32,18 +41,22 @@ struct FieldDef {
   DynType       typeId;
   std::string   name;
   uint32_t      id;
-  uint32_t      schemaId;  // default=0 (e.g. same as Row.schemaId)
+  SPSchemaId    schema;
 
   static const SPFieldDef alloc(DynType typeId_, std::string name_, uint32_t id_ = 0) {
-    FieldDef *tmp = new FieldDef(typeId_, name_, id_, 0);
+    FieldDef *tmp = new FieldDef(typeId_, name_, id_, nullptr);
     return std::shared_ptr<FieldDef>(tmp);
   }
-  static const SPFieldDef alloc(DynType typeId_, uint32_t id_, uint32_t schemaId_ = 0) {
-    FieldDef *tmp = new FieldDef(typeId_, "", id_, schemaId_);
+  static const SPFieldDef alloc(DynType typeId_, uint32_t id_, SPSchemaId schema_ = nullptr) {
+    FieldDef *tmp = new FieldDef(typeId_, "", id_, schema_);
     return std::shared_ptr<FieldDef>(tmp);
   }
-  static const SPFieldDef alloc(DynType typeId_, std::string name_, uint32_t id_, uint32_t schemaId_=0) {
-    FieldDef *tmp = new FieldDef(typeId_, name_, id_, schemaId_);
+  static const SPFieldDef alloc(DynType typeId_, std::string name_, uint32_t id_, SPSchemaId schema_ = nullptr) {
+    FieldDef *tmp = new FieldDef(typeId_, name_, id_, schema_);
+    return std::shared_ptr<FieldDef>(tmp);
+  }
+  static const SPFieldDef alloc(DynType typeId_, std::string name_, SPSchemaId schema_) {
+    FieldDef *tmp = new FieldDef(typeId_, name_, 0, schema_);
     return std::shared_ptr<FieldDef>(tmp);
   }
 
@@ -53,8 +66,8 @@ struct FieldDef {
 
 protected:
   FieldDef(DynType typeId_, std::string name_,
-    uint32_t id_, uint32_t schemaId_) : typeId(typeId_), name(name_),
-    id(id_), schemaId(schemaId_) {
+    uint32_t id_, SPSchemaId schema_) : typeId(typeId_), name(name_),
+    id(id_), schema(schema_) {
   }
 
 friend FieldDefTest;
