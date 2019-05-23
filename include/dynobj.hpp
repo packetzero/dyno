@@ -9,10 +9,10 @@
 #include "dyno.hpp"
 
 struct SchemaId {
-  uint32_t schemaId;
-  std::string schemaName;
+  uint32_t id;
+  std::string name;
 
-  SchemaId(std::string name, uint32_t id=0) : schemaId(id), schemaName(name) {}
+  SchemaId(std::string name_, uint32_t id_=0) : id(id_), name(name_) {}
 };
 
 typedef std::shared_ptr<SchemaId> SPSchemaId;

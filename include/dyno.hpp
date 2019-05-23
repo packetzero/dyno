@@ -412,5 +412,24 @@ protected:
   } \
 } // end macro DYN_TO()
 
+struct dyno {
+  static std::string TypeName(DynType typeId) {
+    switch(typeId) {
+      case TSTRING: return "string";
+      case TBYTES: return "bytes";
+      case TINT32: return "int32";
+      case TUINT32: return "uint32";
+      case TINT64: return "int64";
+      case TUINT64: return "uint64";
+      case TFLOAT64: return "double";
+      case TFLOAT32: return "float";
+      case TINT8: return "int8";
+      case TUINT8: return "uint8";
+      case TNONE:
+      default:
+        return "?";
+    }
+  }
+};
 
 #endif //_DYNO_H_
