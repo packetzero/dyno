@@ -62,6 +62,7 @@ public:
     strval.assign((const char *)val.data(), val.size());
   }
 
+  operator bool() const { return (as_i32() == 0 ? false : true); }
   operator int8_t() const { return as_i8(); }
   operator uint8_t() const { return as_u8(); }
   operator int16_t() const { return as_i16(); }
